@@ -1,0 +1,16 @@
+node_modules/
+dist/
+coverage/
+*.log
+
+# Secrets and local data
+.env
+.env.local
+.env.*.local
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+server/uploads/
+
+# Downloaded tunnel binary
+cloudflared.exe

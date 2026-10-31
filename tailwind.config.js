@@ -1,0 +1,113 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+        serif: ['"Playfair Display"', 'serif'],
+      },
+      colors: {
+        wood: {
+          DEFAULT: '#8B5E3C',
+          50: '#f5efe9',
+          100: '#e5d7c8',
+          200: '#d0b99f',
+          300: '#b89673',
+          400: '#a3794d',
+          500: '#8b5e3c',
+          600: '#754b2e',
+          700: '#5e3a24',
+          800: '#4a2c1d',
+          900: '#3d2419',
+        },
+        // Warm terracotta/coral brand colors
+        terra: {
+          50: '#fffbf7',
+          100: '#fef3eb',
+          200: '#fce4d2',
+          300: '#f8c9ac',
+          400: '#f3a47a',
+          500: '#e87d4d',
+          600: '#d6633c',
+          700: '#b34d30',
+          800: '#8f402a',
+          900: '#753725',
+        },
+        // Warm neutrals
+        cream: {
+          50: '#fefdfb',
+          100: '#fdfaf5',
+          200: '#faf5eb',
+          300: '#f5ede0',
+          400: '#ebe0d0',
+        },
+        // Charcoal for text
+        charcoal: {
+          50: '#f6f6f6',
+          100: '#e7e7e7',
+          200: '#d1d1d1',
+          300: '#b0b0b0',
+          400: '#888888',
+          500: '#6d6d6d',
+          600: '#5b5b5b',
+          700: '#4c4c4c',
+          800: '#3c3c3c',
+          900: '#2b2b2b',
+          950: '#1a1a1a',
+        },
+        // Muted status colors
+        sage: {
+          50: '#f6f9f6',
+          100: '#e3ebe3',
+          200: '#c7d9c7',
+          300: '#a3c1a3',
+          400: '#7ba37b',
+          500: '#5b855b',
+          600: '#486b48',
+          700: '#3c573c',
+          800: '#334633',
+          900: '#2b3a2b',
+        },
+        amber: {
+          50: '#fffbeb',
+          100: '#fef3c7',
+          200: '#fde68a',
+          300: '#fcd34d',
+          400: '#fbbf24',
+          500: '#f59e0b',
+          600: '#d97706',
+          700: '#b45309',
+          800: '#92400e',
+          900: '#78350f',
+        },
+        rose: {
+          50: '#fff1f2',
+          100: '#ffe4e6',
+          200: '#fecdd3',
+          300: '#fda4af',
+          400: '#fb7185',
+          500: '#f43f5e',
+          600: '#e11d48',
+          700: '#be123c',
+          800: '#9f1239',
+          900: '#881337',
+        },
+      },
+      boxShadow: {
+        'soft': '0 2px 8px -2px rgba(0, 0, 0, 0.05), 0 4px 16px -4px rgba(0, 0, 0, 0.08)',
+        'card': '0 1px 3px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.06)',
+        'card-hover': '0 4px 8px rgba(0, 0, 0, 0.06), 0 8px 24px rgba(0, 0, 0, 0.08)',
+        'elevated': '0 8px 24px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04)',
+      },
+      borderRadius: {
+        'xl': '14px',
+        '2xl': '18px',
+        '3xl': '24px',
+      },
+    },
+  },
+  plugins: [
+    require('@tailwindcss/typography'),
+  ],
+};

@@ -633,6 +633,4 @@ export function setupIntegratedRoutes(app, { query, queryOne, run, io, jwtSecret
   });
 
   return { authenticate, requireAdmin };
-
-  return { authenticate, requireAdmin, requireTenant };
 }

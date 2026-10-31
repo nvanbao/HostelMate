@@ -109,7 +109,7 @@ export function TenantDashboard({ onNavigate }: TenantDashboardProps = {}) {
     }
     setSaving(true);
     try {
-      const signatureBase64 = sigPad.current.getTrimmedCanvas().toDataURL('image/png');
+      const signatureBase64 = sigPad.current.getCanvas().toDataURL('image/png');
       const res = await fetch(`${API_URL}/contracts/${signingAssignmentId}/sign`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

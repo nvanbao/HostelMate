@@ -70,20 +70,18 @@ export function RoomCard({ rental, userFullName, bgImg, roomInvoices = [], roomR
       <div className="flex-1 p-6 flex flex-col gap-5 bg-cream-50/30">
         
         {/* Contract Actions if needed */}
-        {rental.assignment.file_hop_dong && (
-          <div className="flex items-center justify-between pb-4 border-b border-wood-100">
-            <span className="text-xs uppercase tracking-widest font-semibold text-charcoal-500">Hợp đồng</span>
-            {rental.assignment.trang_thai_ky === 'Đã ký' ? (
-              <button onClick={() => onDownloadContract(rental.assignment.id)} className="flex items-center gap-1.5 text-xs font-medium text-wood-600 hover:text-wood-800 transition-colors">
-                <Download className="w-3.5 h-3.5" /> Tải về
-              </button>
-            ) : (
-              <button onClick={() => onSignContract(rental.assignment.id)} className="flex items-center gap-1.5 text-xs font-semibold text-white bg-wood-500 hover:bg-wood-600 px-4 py-1.5 rounded-full shadow-sm transition-colors">
-                <PenTool className="w-3.5 h-3.5" /> Ký HĐ ngay
-              </button>
-            )}
-          </div>
-        )}
+        <div className="flex items-center justify-between pb-4 border-b border-wood-100">
+          <span className="text-xs uppercase tracking-widest font-semibold text-charcoal-500">Hợp đồng</span>
+          {rental.assignment.trang_thai_ky === 'Đã ký' ? (
+            <button onClick={() => onDownloadContract(rental.assignment.id)} className="flex items-center gap-1.5 text-xs font-medium text-wood-600 hover:text-wood-800 transition-colors">
+              <Download className="w-3.5 h-3.5" /> Tải về
+            </button>
+          ) : (
+            <button onClick={() => onSignContract(rental.assignment.id)} className="flex items-center gap-1.5 text-xs font-semibold text-white bg-wood-500 hover:bg-wood-600 px-4 py-1.5 rounded-full shadow-sm transition-colors">
+              <PenTool className="w-3.5 h-3.5" /> Ký HĐ ngay
+            </button>
+          )}
+        </div>
 
         {/* Room Specific Invoices & Repairs */}
         {!hasActionItems ? (

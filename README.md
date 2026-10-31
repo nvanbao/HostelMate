@@ -34,7 +34,7 @@ Hệ thống web quản lý phòng trọ cho chủ trọ và khách thuê: phòn
 | Backend | Node.js, Express, Socket.IO, PDFKit |
 | Cơ sở dữ liệu | SQLite |
 | Xác thực | JWT trong cookie httpOnly, bcrypt, Google Sign-In |
-| Kiểm thử và CI | Jest, Supertest, Vitest, ESLint, GitHub Actions |
+| Kiểm thử và CI | Jest, Supertest, Vitest, Playwright, ESLint, GitHub Actions |
 
 ## Kiến trúc
 
@@ -129,13 +129,29 @@ npm run lint
 npm run typecheck
 npm test
 npm run test:server -- --coverage
+npx playwright install chromium
+npm run test:e2e
 ```
 
-Có 68 test backend và 3 test frontend. Coverage backend đo trên toàn bộ mã server là **khoảng 64% số dòng**, CI yêu cầu tối thiểu 60%. Phần chưa được phủ nhiều nhất là chatbot AI, đăng nhập Google và proxy ảnh VietQR. Giao diện React chưa có test tự động, hiện mới có test cho phần tạo mã VietQR.
+| Loại | Công cụ | Số test | Phạm vi |
+|---|---|---|---|
+| Tích hợp API | Jest, Supertest | 68 | Phân quyền, mật khẩu, nghiệp vụ, logic webhook SePay |
+| Đơn vị | Vitest | 3 | Tạo dữ liệu mã VietQR |
+| Đầu cuối | Playwright | 10 | Các luồng chính trên trình duyệt Chromium thật |
+
+Test đầu cuối tự khởi động API và frontend với cổng và database riêng, nên không đụng dữ liệu đang phát triển. Các luồng được kiểm tra:
+
+- Đăng nhập, giữ phiên, đăng xuất, khóa tài khoản, chặn khách thuê khỏi chức năng quản lý
+- Admin tạo phòng, thêm người thuê, xếp phòng, cấp tài khoản; khách đăng nhập thấy đúng phòng
+- Hiển thị VietQR, webhook SePay giả lập cập nhật hóa đơn ngay trên màn hình, chuyển thiếu tiền
+- Khách gửi yêu cầu sửa chữa, Admin nhận ngay qua Socket.IO, xử lý xong và khách xác nhận
+- Ký hợp đồng bằng chữ ký tay và tải PDF
+
+Coverage backend đo trên toàn bộ mã server là **khoảng 64% số dòng**, CI yêu cầu tối thiểu 60%. Phần chưa được phủ nhiều nhất là chatbot AI, đăng nhập Google và proxy ảnh VietQR.
 
 ## Hướng phát triển
 
-- Thêm test cho giao diện và luồng đầu cuối bằng Playwright
+- Mở rộng test đầu cuối sang nhập điện nước và lập hóa đơn trên giao diện
 - Chuyển sang PostgreSQL khi có nhiều cơ sở
 - Hợp nhất bộ component UI của Admin và khách thuê
 - Tách `integrated-routes.js` theo từng phân hệ

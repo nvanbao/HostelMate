@@ -13,7 +13,7 @@ interface PaymentSettings {
   payment_prefix?: string;
 }
 
-export function MockPaymentGateway({ invoiceId, amount, onBack }: { invoiceId: string; amount: number; onBack: () => void }) {
+export function PaymentPage({ invoiceId, amount, onBack }: { invoiceId: string; amount: number; onBack: () => void }) {
   const [invoice, setInvoice] = useState<Invoice | null>(null);
   const [settings, setSettings] = useState<PaymentSettings>({});
   const [loading, setLoading] = useState(true);

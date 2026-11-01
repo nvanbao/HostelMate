@@ -63,7 +63,7 @@ export function AiChatbot() {
 
       {/* Chat Window */}
       <div
-        className={`fixed bottom-6 right-6 w-[380px] h-[600px] bg-white/40 backdrop-blur-[40px] rounded-[32px] shadow-[0_8px_32px_rgba(0,0,0,0.15)] border border-white/60 flex flex-col overflow-hidden transition-all duration-300 z-50 origin-bottom-right ${isOpen ? 'scale-100 opacity-100' : 'scale-0 opacity-0 pointer-events-none'}`}
+        className={`fixed bottom-4 right-4 left-4 sm:left-auto sm:bottom-6 sm:right-6 sm:w-[380px] h-[min(600px,calc(100vh-2rem))] bg-white/40 backdrop-blur-[40px] rounded-[32px] shadow-[0_8px_32px_rgba(0,0,0,0.15)] border border-white/60 flex flex-col overflow-hidden transition-all duration-300 z-50 origin-bottom-right ${isOpen ? 'scale-100 opacity-100' : 'scale-0 opacity-0 pointer-events-none'}`}
       >
         {/* Header */}
         <div className="bg-white/40 backdrop-blur-xl border-b border-black/5 px-5 py-4 flex items-center justify-between shadow-sm z-10">

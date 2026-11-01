@@ -68,6 +68,7 @@ describe('API authorization and password handling', () => {
     ['post', '/api/contracts/any/sign'],
     ['get', '/api/contracts/any/download'],
     ['get', '/api/tenant/portal'],
+    ['post', '/api/ai/chat'],
   ])('%s %s requires login', async (method, path) => {
     const response = await request(app)[method](path);
     expect(response.status).toBe(401);

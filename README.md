@@ -32,7 +32,7 @@ Hệ thống web quản lý phòng trọ cho chủ trọ và khách thuê: phòn
 |---|---|
 | Frontend | React 18, TypeScript, Vite, Tailwind CSS |
 | Backend | Node.js, Express, Socket.IO, PDFKit |
-| Cơ sở dữ liệu | SQLite |
+| Cơ sở dữ liệu | SQLite (`node:sqlite`) |
 | Xác thực | JWT trong cookie httpOnly, bcrypt, Google Sign-In |
 | Kiểm thử và CI | Jest, Supertest, Vitest, Playwright, ESLint, GitHub Actions |
 
@@ -65,7 +65,7 @@ src/
 
 ## Chạy dự án
 
-Yêu cầu Node.js 20 trở lên.
+Yêu cầu Node.js 22.13 trở lên (dùng module SQLite có sẵn của Node, không cần build thư viện native).
 
 ```bash
 npm install
@@ -120,7 +120,8 @@ sequenceDiagram
 - API yêu cầu đăng nhập và phân quyền theo vai trò; khách thuê chỉ truy cập được dữ liệu của mình và phòng đang thuê
 - Mật khẩu băm bằng bcrypt, không bao giờ trả về qua API; mật khẩu tạm được sinh ngẫu nhiên ở server
 - Giới hạn số lần đăng nhập sai; tài khoản bị khóa mất phiên đăng nhập ngay
-- Kết nối Socket.IO phải có token hợp lệ
+- Kết nối Socket.IO và chatbot AI đều yêu cầu đăng nhập; chatbot giới hạn 20 tin nhắn mỗi phút
+- Header bảo mật bằng Helmet; ở production chỉ chấp nhận CORS từ `CLIENT_ORIGIN`
 
 ## Kiểm thử
 
@@ -135,9 +136,9 @@ npm run test:e2e
 
 | Loại | Công cụ | Số test | Phạm vi |
 |---|---|---|---|
-| Tích hợp API | Jest, Supertest | 68 | Phân quyền, mật khẩu, nghiệp vụ, logic webhook SePay |
+| Tích hợp API | Jest, Supertest | 66 | Phân quyền, mật khẩu, nghiệp vụ, logic webhook SePay |
 | Đơn vị | Vitest | 3 | Tạo dữ liệu mã VietQR |
-| Đầu cuối | Playwright | 10 | Các luồng chính trên trình duyệt Chromium thật |
+| Đầu cuối | Playwright | 12 | Các luồng chính trên trình duyệt Chromium thật |
 
 Test đầu cuối tự khởi động API và frontend với cổng và database riêng, nên không đụng dữ liệu đang phát triển. Các luồng được kiểm tra:
 
@@ -146,6 +147,7 @@ Test đầu cuối tự khởi động API và frontend với cổng và databas
 - Hiển thị VietQR, webhook SePay giả lập cập nhật hóa đơn ngay trên màn hình, chuyển thiếu tiền
 - Khách gửi yêu cầu sửa chữa, Admin nhận ngay qua Socket.IO, xử lý xong và khách xác nhận
 - Ký hợp đồng bằng chữ ký tay và tải PDF
+- Giao diện điện thoại: menu trượt và không tràn ngang trên các trang
 
 Coverage backend đo trên toàn bộ mã server là **khoảng 64% số dòng**, CI yêu cầu tối thiểu 60%. Phần chưa được phủ nhiều nhất là chatbot AI, đăng nhập Google và proxy ảnh VietQR.
 

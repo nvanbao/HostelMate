@@ -5,6 +5,7 @@ import { TenantDashboard } from './pages/TenantDashboard';
 import { Invoices as TenantInvoices } from './pages/Invoices';
 import { Repairs as TenantRepairs } from './pages/Repairs';
 import { Login } from './pages/Login';
+import { Menu } from 'lucide-react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { AiChatbot } from './components/ui/AiChatbot';
 
@@ -43,6 +44,7 @@ function TenantBackground() {
 function AppContent() {
   const { user, loading } = useAuth();
   const [currentPage, setCurrentPage] = useState<Page>('dashboard');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isAdmin = user?.role === 'ADMIN';
 
   useEffect(() => setCurrentPage('dashboard'), [user?.id, user?.role]);
@@ -51,6 +53,11 @@ function AppContent() {
     return <div className="min-h-screen flex items-center justify-center bg-cream-50"><div className="w-8 h-8 border-4 border-terra-500 border-t-transparent rounded-full animate-spin" /></div>;
   }
   if (!user) return <Login />;
+
+  const openPage = (page: Page) => {
+    setCurrentPage(page);
+    setIsMenuOpen(false);
+  };
 
   const renderAdminPage = () => {
     switch (currentPage) {
@@ -77,16 +84,31 @@ function AppContent() {
   return (
     <div className="min-h-screen bg-cream-100 flex">
       {isAdmin ? <AdminBackground /> : <TenantBackground />}
+      {isMenuOpen && (
+        <div className="fixed inset-0 z-30 bg-charcoal-900/40 lg:hidden" onClick={() => setIsMenuOpen(false)} />
+      )}
       {isAdmin ? (
         <AdminSidebar
           currentPage={currentPage as AdminPage}
-          onNavigate={(page) => setCurrentPage(page as Page)}
+          onNavigate={(page) => openPage(page as Page)}
+          isOpen={isMenuOpen}
         />
       ) : (
-        <TenantSidebar currentPage={currentPage} onNavigate={setCurrentPage} />
+        <TenantSidebar currentPage={currentPage} onNavigate={openPage} isOpen={isMenuOpen} />
       )}
-      <main className="flex-1 ml-72 min-h-screen relative" style={{ zIndex: 1 }}>
-        <div className="py-10 px-12 max-w-6xl mx-auto">
+      <main className="flex-1 min-w-0 lg:ml-72 min-h-screen relative" style={{ zIndex: 1 }}>
+        <div className="lg:hidden sticky top-0 z-20 flex items-center gap-3 px-4 py-3 bg-white/90 backdrop-blur border-b border-charcoal-100/50">
+          <button
+            type="button"
+            onClick={() => setIsMenuOpen(true)}
+            aria-label="Mở menu"
+            className="p-2 -ml-2 rounded-lg text-charcoal-700 hover:bg-cream-100"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
+          <span className="font-serif text-lg tracking-widest uppercase text-charcoal-900">HostelMate</span>
+        </div>
+        <div className="py-6 px-4 lg:py-10 lg:px-12 max-w-6xl mx-auto">
           {isAdmin ? renderAdminPage() : renderTenantPage()}
         </div>
       </main>

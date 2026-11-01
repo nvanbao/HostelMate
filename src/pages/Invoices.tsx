@@ -24,7 +24,7 @@ import { FilterDropdown } from '../components/ui/FilterDropdown';
 import { Button } from '../components/ui/Button';
 import { Input, Badge, Spinner, EmptyState } from '../components/ui/Input';
 import { useAuth } from '../context/AuthContext';
-import { MockPaymentGateway } from './MockPaymentGateway';
+import { PaymentPage } from './PaymentPage';
 import {
   getInvoices,
   createInvoice,
@@ -307,7 +307,7 @@ export function Invoices() {
   if (loading) return <Spinner />;
 
   if (payingInvoice) {
-    return <MockPaymentGateway invoiceId={payingInvoice.id} amount={Number(payingInvoice.total_amount)} onBack={() => { setPayingInvoice(null); loadData(); }} />;
+    return <PaymentPage invoiceId={payingInvoice.id} amount={Number(payingInvoice.total_amount)} onBack={() => { setPayingInvoice(null); loadData(); }} />;
   }
 
   return (

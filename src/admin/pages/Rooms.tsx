@@ -413,7 +413,7 @@ export function Rooms() {
 
       {/* Filters */}
       <section className="space-y-4">
-        <div className="flex gap-1 lg:gap-2 items-center w-full">
+        <div className="flex flex-wrap lg:flex-nowrap gap-1 lg:gap-2 items-center w-full">
           {(['all', 'available', 'occupied', 'maintenance'] as const).map((status) => (
             <button
               key={status}

@@ -29,7 +29,7 @@ export const formWith = (page: Page, fieldName: string) => page.locator('form', 
 
 const json = async (response: Awaited<ReturnType<APIRequestContext['post']>>) => {
   expect(response.ok(), await response.text()).toBeTruthy();
-  return response.json();
+  return response.json() as Promise<Record<string, string>>;
 };
 
 export async function adminApi() {

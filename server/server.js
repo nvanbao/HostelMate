@@ -6,6 +6,7 @@ import path from 'path';
 import http from 'http';
 import cookieParser from 'cookie-parser';
 import rateLimit from 'express-rate-limit';
+import helmet from 'helmet';
 import { Server as SocketIOServer } from 'socket.io';
 import { fileURLToPath } from 'url';
 import { query, queryOne, run, dbReady } from './db.js';
@@ -27,13 +28,21 @@ dotenv.config({ path: path.join(__dirname, '..', '.env') });
 
 const app = express();
 const httpServer = http.createServer(app);
-const io = new SocketIOServer(httpServer, { cors: { origin: true, credentials: true } });
+// Production serves the frontend from this origin, so other sites need an explicit CLIENT_ORIGIN.
+const corsOrigin = process.env.CLIENT_ORIGIN
+  ? process.env.CLIENT_ORIGIN.split(',').map((origin) => origin.trim())
+  : process.env.NODE_ENV !== 'production';
+const io = new SocketIOServer(httpServer, { cors: { origin: corsOrigin, credentials: true } });
 const port = Number(process.env.PORT || 5000);
 const JWT_SECRET = getJwtSecret();
 
 app.set('trust proxy', 1);
 app.set('io', io);
-app.use(cors({ origin: true, credentials: true }));
+app.use(helmet({
+  contentSecurityPolicy: false, // The frontend loads Google fonts and sign-in from other origins.
+  crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' },
+}));
+app.use(cors({ origin: corsOrigin, credentials: true }));
 app.use(express.json({ limit: '10mb' }));
 app.use(cookieParser());
 app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 15000, standardHeaders: true, legacyHeaders: false }));

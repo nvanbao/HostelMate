@@ -14,6 +14,7 @@ import { useAuth } from '../../../context/AuthContext';
 import { ProfileModal } from '../../../components/ui/ProfileModal';
 
 interface SidebarProps {
+  isOpen?: boolean;
   currentPage: Page;
   onNavigate: (page: Page) => void;
 }
@@ -28,13 +29,13 @@ const navItems: { id: Page; label: string; icon: React.ReactNode; description: s
   { id: 'repairs', label: 'Sửa chữa', icon: <PiWrenchLight className="w-5 h-5" />, description: 'Yêu cầu bảo trì' },
 ];
 
-export function Sidebar({ currentPage, onNavigate }: SidebarProps) {
+export function Sidebar({ currentPage, onNavigate, isOpen = false }: SidebarProps) {
   const { user, logout } = useAuth();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   return (
     <>
-      <aside className="w-72 bg-white border-r border-charcoal-100/50 fixed h-screen flex flex-col overflow-hidden z-40">
+      <aside className={`w-72 bg-white border-r border-charcoal-100/50 fixed h-screen flex flex-col overflow-hidden z-40 transition-transform duration-200 lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         {/* Brand Section */}
         <div className="px-7 py-8 border-b border-charcoal-100/50 flex justify-center">
           <h1 className="text-2xl font-serif text-charcoal-900 tracking-widest uppercase relative inline-block">

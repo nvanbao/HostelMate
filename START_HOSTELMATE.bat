@@ -9,7 +9,7 @@ echo ================================================
 
 where node >nul 2>nul
 if errorlevel 1 (
-  echo [LOI] Chua cai Node.js. Hay cai Node.js 20 LTS tro len.
+  echo [LOI] Chua cai Node.js. Hay cai Node.js 22 LTS tro len.
   pause
   exit /b 1
 )

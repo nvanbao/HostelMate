@@ -1,4 +1,4 @@
-import { createRequire } from 'module';
+import { DatabaseSync } from 'node:sqlite';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import fs from 'fs';
@@ -15,74 +15,27 @@ if (!isTest && process.env.RESET_DB_ON_START === 'true' && fs.existsSync(dbPath)
   fs.rmSync(dbPath, { force: true });
 }
 
-const require = createRequire(import.meta.url);
-let db;
-let driver = 'sqlite3';
-try {
-  const sqlite3 = require('sqlite3');
-  db = new sqlite3.Database(dbPath);
-} catch {
-  // Node.js 22+ includes a built-in SQLite driver. This fallback is useful in
-  // restricted/offline environments where sqlite3 cannot download its native binary.
-  const { DatabaseSync } = require('node:sqlite');
-  db = new DatabaseSync(dbPath);
-  driver = 'node:sqlite';
-  console.warn('sqlite3 native binding unavailable; using node:sqlite fallback.');
-}
+const db = new DatabaseSync(dbPath);
 
 function normalizeParams(params) {
   return Array.isArray(params) ? params : [params];
 }
 
-export const query = (sql, params = []) => {
-  if (driver === 'node:sqlite') {
-    return Promise.resolve(db.prepare(sql).all(...normalizeParams(params)));
-  }
-  return new Promise((resolve, reject) => {
-    db.all(sql, params, (error, rows) => error ? reject(error) : resolve(rows));
-  });
+export const query = async (sql, params = []) => db.prepare(sql).all(...normalizeParams(params));
+
+export const queryOne = async (sql, params = []) => db.prepare(sql).get(...normalizeParams(params)) || null;
+
+export const run = async (sql, params = []) => {
+  const result = db.prepare(sql).run(...normalizeParams(params));
+  return { id: Number(result.lastInsertRowid || 0), changes: Number(result.changes || 0) };
 };
 
-export const queryOne = (sql, params = []) => {
-  if (driver === 'node:sqlite') {
-    return Promise.resolve(db.prepare(sql).get(...normalizeParams(params)) || null);
-  }
-  return new Promise((resolve, reject) => {
-    db.get(sql, params, (error, row) => error ? reject(error) : resolve(row || null));
-  });
+export const exec = async (sql) => {
+  db.exec(sql);
 };
 
-export const run = (sql, params = []) => {
-  if (driver === 'node:sqlite') {
-    const result = db.prepare(sql).run(...normalizeParams(params));
-    return Promise.resolve({ id: Number(result.lastInsertRowid || 0), changes: Number(result.changes || 0) });
-  }
-  return new Promise((resolve, reject) => {
-    db.run(sql, params, function callback(error) {
-      if (error) reject(error);
-      else resolve({ id: this.lastID, changes: this.changes });
-    });
-  });
-};
-
-export const exec = (sql) => {
-  if (driver === 'node:sqlite') {
-    db.exec(sql);
-    return Promise.resolve();
-  }
-  return new Promise((resolve, reject) => {
-    db.exec(sql, (error) => error ? reject(error) : resolve());
-  });
-};
-
-export const closeDatabase = () => {
-  if (driver === 'node:sqlite') {
-    db.close();
-    return Promise.resolve();
-  }
-  return new Promise((resolve, reject) => {
-    db.close((error) => error ? reject(error) : resolve());
-  });
+export const closeDatabase = async () => {
+  db.close();
 };
 
 const schema = `

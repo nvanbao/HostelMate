@@ -4,7 +4,7 @@ import { Lock, Phone, ChevronRight, Bell, FileText, Wrench } from 'lucide-react'
 import SignatureCanvas from 'react-signature-canvas';
 import { Button } from '../components/ui/Button';
 import { Modal } from '../components/ui/Modal';
-import { MockPaymentGateway } from './MockPaymentGateway';
+import { PaymentPage } from './PaymentPage';
 import { getRepairRequests, changePassword } from '../lib/api';
 import { RoomCard } from '../components/tenant/RoomCard';
 import { FinancialsCard } from '../components/tenant/FinancialsCard';
@@ -136,7 +136,7 @@ export function TenantDashboard({ onNavigate }: TenantDashboardProps = {}) {
   };
 
   if (payingInvoice) {
-    return <MockPaymentGateway invoiceId={payingInvoice.id} amount={Number(payingInvoice.total_amount)} onBack={() => { setPayingInvoice(null); loadPortalData(); loadRepairSummary(); }} />;
+    return <PaymentPage invoiceId={payingInvoice.id} amount={Number(payingInvoice.total_amount)} onBack={() => { setPayingInvoice(null); loadPortalData(); loadRepairSummary(); }} />;
   }
 
   const rentals: any[] = portalData?.rentals || (portalData?.assignment ? [{
@@ -161,7 +161,7 @@ export function TenantDashboard({ onNavigate }: TenantDashboardProps = {}) {
       <header className="flex items-start justify-between">
         <div>
           <h1 className="text-3xl font-serif lining-nums tabular-nums text-charcoal-900 tracking-wide">
-            Welcome, <span className="italic">{userFullName || user?.username}</span>.
+            Xin chào, <span className="italic">{userFullName || user?.username}</span>.
           </h1>
           <p className="text-charcoal-400 mt-2 text-sm">Xem nhanh hoạt động phòng trọ của bạn</p>
         </div>
@@ -198,7 +198,7 @@ export function TenantDashboard({ onNavigate }: TenantDashboardProps = {}) {
       {/* ROOMS GRID */}
       <div>
         <h2 className="text-xl font-serif text-charcoal-900 mb-6 flex items-center gap-2">
-          Your Residences <span className="text-charcoal-300 text-sm font-sans font-normal">({rentals.length})</span>
+          Phòng của bạn <span className="text-charcoal-300 text-sm font-sans font-normal">({rentals.length})</span>
         </h2>
         
         {rentals.length === 0 ? (

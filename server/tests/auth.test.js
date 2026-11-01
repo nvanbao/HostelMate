@@ -12,7 +12,7 @@ jest.unstable_mockModule('../db.js', () => ({
 
 describe('Auth Middleware', () => {
   let mockReq, mockRes, mockNext;
-  let authenticateToken, optionalAuthToken;
+  let authenticateToken;
   let jwt, db;
 
   beforeAll(async () => {
@@ -20,7 +20,6 @@ describe('Auth Middleware', () => {
     db = await import('../db.js');
     const auth = await import('../src/middleware/auth.js');
     authenticateToken = auth.authenticateToken;
-    optionalAuthToken = auth.optionalAuthToken;
   });
 
   beforeEach(() => {
@@ -66,6 +65,14 @@ describe('Auth Middleware', () => {
       expect(mockRes.status).toHaveBeenCalledWith(401);
     });
 
+    it('should fail TENANT if locked', async () => {
+      mockReq.cookies.token = 'tenant-token';
+      jwt.verify.mockReturnValue({ id: 't1', role: 'TENANT' });
+      db.queryOne.mockResolvedValue({ id: 't1', username: 't1', is_locked: 1 });
+      await authenticateToken(mockReq, mockRes, mockNext);
+      expect(mockRes.status).toHaveBeenCalledWith(401);
+    });
+
     it('should authenticate ADMIN', async () => {
       mockReq.cookies.token = 'admin-token';
       jwt.verify.mockReturnValue({ id: 'a1', role: 'ADMIN', token_version: 1 });
@@ -80,38 +87,6 @@ describe('Auth Middleware', () => {
       db.queryOne.mockResolvedValue({ token_version: 2 });
       await authenticateToken(mockReq, mockRes, mockNext);
       expect(mockRes.status).toHaveBeenCalledWith(401);
-    });
-  });
-
-  describe('optionalAuthToken', () => {
-    it('should call next if no token', async () => {
-      await optionalAuthToken(mockReq, mockRes, mockNext);
-      expect(mockNext).toHaveBeenCalled();
-    });
-
-    it('should call next if token invalid', async () => {
-      mockReq.cookies.token = 'invalid-token';
-      jwt.verify.mockImplementation(() => { throw new Error('Invalid'); });
-      await optionalAuthToken(mockReq, mockRes, mockNext);
-      expect(mockNext).toHaveBeenCalled();
-    });
-
-    it('should authenticate TENANT', async () => {
-      mockReq.cookies.token = 'tenant-token';
-      jwt.verify.mockReturnValue({ id: 't1', role: 'TENANT' });
-      db.queryOne.mockResolvedValue({ id: 't1', username: 't1' });
-      await optionalAuthToken(mockReq, mockRes, mockNext);
-      expect(mockNext).toHaveBeenCalled();
-      expect(mockReq.user.id).toBe('t1');
-    });
-
-    it('should authenticate ADMIN', async () => {
-      mockReq.cookies.token = 'admin-token';
-      jwt.verify.mockReturnValue({ id: 'a1', role: 'ADMIN', token_version: 1 });
-      db.queryOne.mockResolvedValue({ token_version: 1 });
-      await optionalAuthToken(mockReq, mockRes, mockNext);
-      expect(mockNext).toHaveBeenCalled();
-      expect(mockReq.user.id).toBe('a1');
     });
   });
 });

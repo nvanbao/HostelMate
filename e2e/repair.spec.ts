@@ -18,7 +18,7 @@ test('khách gửi yêu cầu, Admin thấy ngay không cần tải lại, xử 
   await test.step('khách thuê gửi yêu cầu', async () => {
     await page.getByRole('button', { name: 'Tạo yêu cầu' }).first().click();
     await page.locator('[name="title"]').fill(title);
-    await page.locator('[name="description"]').fill('Máy lạnh không lạnh từ sáng nay');
+    await page.locator('textarea[name="description"]').fill('Máy lạnh không lạnh từ sáng nay');
     await page.getByRole('button', { name: 'Lưu yêu cầu' }).click();
     await expect(page.getByText(title)).toBeVisible();
   });

@@ -2,7 +2,7 @@
 
 Hệ thống web quản lý phòng trọ cho chủ trọ và khách thuê: phòng, hợp đồng, chỉ số điện nước, hóa đơn thanh toán bằng VietQR, yêu cầu sửa chữa và chatbot AI.
 
-> **Tác giả và bảo trì:** Nguyễn Văn Bảo. HostelMate khởi nguồn từ một đồ án nhóm 4 người (CMU-SE 433, Đại học Duy Tân, 07/2026). Sau khi nhóm dừng đề tài và bàn giao lại, dự án do Nguyễn Văn Bảo một mình phát triển và duy trì, gồm tái cấu trúc backend, bảo mật và kiểm thử.
+> Phát triển và duy trì bởi **Nguyễn Văn Bảo**, theo phương pháp vibe coding với sự hỗ trợ của AI.
 
 ![Tổng quan Admin](docs/screenshots/admin-dashboard.jpg)
 
@@ -159,3 +159,7 @@ Coverage backend đo trên toàn bộ mã server là **khoảng 64% số dòng**
 - Tách `integrated-routes.js` theo từng phân hệ
 
 Tài liệu endpoint: [API.md](API.md).
+
+## Nguồn gốc
+
+Dự án khởi nguồn từ một đồ án nhóm (CMU-SE 433, Đại học Duy Tân, 07/2026). Sau khi nhóm dừng đề tài và bàn giao toàn quyền, Nguyễn Văn Bảo tiếp tục phát triển một mình.

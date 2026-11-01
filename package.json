@@ -55,5 +55,6 @@
   "description": "Hệ thống quản lý phòng trọ: hợp đồng, điện nước, hóa đơn VietQR, sửa chữa và chatbot AI",
   "engines": {
     "node": ">=22.13"
-  }
+  },
+  "author": "Nguyen Van Bao"
 }

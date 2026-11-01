@@ -30,5 +30,6 @@
   },
   "engines": {
     "node": ">=22.13"
-  }
+  },
+  "author": "Nguyen Van Bao"
 }

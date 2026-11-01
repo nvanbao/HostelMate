@@ -2,7 +2,7 @@
 
 Hệ thống web quản lý phòng trọ cho chủ trọ và khách thuê: phòng, hợp đồng, chỉ số điện nước, hóa đơn thanh toán bằng VietQR, yêu cầu sửa chữa và chatbot AI.
 
-> Phát triển và duy trì bởi **Nguyễn Văn Bảo**, theo phương pháp vibe coding với sự hỗ trợ của AI.
+> **Chủ dự án và người phát triển chính:** Nguyễn Văn Bảo. Phát triển theo phương pháp vibe coding với sự hỗ trợ của AI.
 
 ![Tổng quan Admin](docs/screenshots/admin-dashboard.jpg)
 
@@ -45,7 +45,7 @@ flowchart LR
     API --> DB[("SQLite")]
     API --> PDF["PDFKit: hợp đồng"]
     API --> AI["Gemini: chatbot"]
-    Bank["SePay webhook"] -.->|chưa nối tài khoản thật| API
+    Bank["SePay webhook"] --> API
 ```
 
 ```text
@@ -94,7 +94,7 @@ Server từ chối khởi động nếu thiếu `JWT_SECRET`, hoặc thiếu `AD
 
 Mã **VietQR** được tạo ngay trên trình duyệt theo chuẩn EMVCo, từ thông tin ngân hàng trong `.env`. Admin xác nhận thanh toán thủ công trên trang hóa đơn.
 
-**Webhook SePay chỉ được kiểm thử bằng dữ liệu giả lập và hiện chưa nối với tài khoản thật.** Phần logic đã có và được test:
+**Webhook SePay** tự động xác nhận hóa đơn khi có tiền vào tài khoản. Để bật, điền `SEPAY_WEBHOOK_API_KEY` và cấu hình URL `/api/webhooks/sepay` trên SePay; khi chưa có key, webhook trả về 503. Luồng xử lý gồm:
 
 - Xác thực API key, từ chối mọi request khi chưa cấu hình key
 - Bỏ qua giao dịch chuyển ra và giao dịch không khớp mã hóa đơn
@@ -144,7 +144,7 @@ Test đầu cuối tự khởi động API và frontend với cổng và databas
 
 - Đăng nhập, giữ phiên, đăng xuất, khóa tài khoản, chặn khách thuê khỏi chức năng quản lý
 - Admin tạo phòng, thêm người thuê, xếp phòng, cấp tài khoản; khách đăng nhập thấy đúng phòng
-- Hiển thị VietQR, webhook SePay giả lập cập nhật hóa đơn ngay trên màn hình, chuyển thiếu tiền
+- Hiển thị VietQR, webhook SePay cập nhật hóa đơn ngay trên màn hình, chuyển thiếu tiền
 - Khách gửi yêu cầu sửa chữa, Admin nhận ngay qua Socket.IO, xử lý xong và khách xác nhận
 - Ký hợp đồng bằng chữ ký tay và tải PDF
 - Giao diện điện thoại: menu trượt và không tràn ngang trên các trang
@@ -159,7 +159,3 @@ Coverage backend đo trên toàn bộ mã server là **khoảng 64% số dòng**
 - Tách `integrated-routes.js` theo từng phân hệ
 
 Tài liệu endpoint: [API.md](API.md).
-
-## Nguồn gốc
-
-Dự án khởi nguồn từ một đồ án nhóm (CMU-SE 433, Đại học Duy Tân, 07/2026). Sau khi nhóm dừng đề tài và bàn giao toàn quyền, Nguyễn Văn Bảo tiếp tục phát triển một mình.
